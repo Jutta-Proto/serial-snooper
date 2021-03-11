@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(PROJECT_DESCRIPTION " C++ serial snooper for JURA coffee makers.")
 
-project("Jutta_Serial_Snooper" 
+project("Jutta_Snooper" 
             VERSION 0.0.0
             DESCRIPTION "${PROJECT_DESCRIPTION}"
             HOMEPAGE_URL "https://github.com/Jutta-Proto/serial-snooper")
@@ -20,6 +20,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(GNUInstallDirs)
 include(sanitizer)
 include(gcc_analyze)
+include(FetchContent)
 
 if (${ENABLE_LINTING})
     message(STATUS "Enabling linting")
@@ -48,14 +49,6 @@ else ()
     endforeach()  
 endif()
 
-if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-   message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-   file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.15/conan.cmake"
-                 "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
-
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-
 set(CONAN_CONFIGS"Release;Debug;RelWithDebInfo")
 if(NOT CMAKE_BUILD_TYPE IN_LIST CONAN_CONFIGS)
     set(CONAN_BUILD_TYPE "Debug")
@@ -63,26 +56,12 @@ else()
     set(CONAN_BUILD_TYPE ${CMAKE_BUILD_TYPE})
 endif()
 
-conan_cmake_run(REQUIRES catch2/2.13.3
-                         spdlog/1.8.0
-                SETTINGS compiler.cppstd=${CMAKE_CXX_STANDARD}
-                         os=${CMAKE_SYSTEM_NAME}
-                OPTIONS  spdlog:header_only=False
-                BUILD    missing
-                BUILD_TYPE ${CONAN_BUILD_TYPE})
-
-conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
-
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
+FetchContent_Declare(jutta_proto
+                     GIT_REPOSITORY         https://github.com/Jutta-Proto/protocol-cpp.git
+                     GIT_TAG main
+                     USES_TERMINAL_DOWNLOAD TRUE)   # <---- This is needed only for Ninja to show download progress
+FetchContent_MakeAvailable(jutta_proto)
+
 add_subdirectory(src)
-
-# Testing
-if(${BUILD_TESTING})
-    message(STATUS "Testing is enabled")
-    enable_testing()
-    add_subdirectory(tests)
-else()
-    message(STATUS "Testing is disabled")
-endif()
-
