@@ -1,6 +1,6 @@
 #include "JuttaSnooper.hpp"
 #include "jutta_proto/JuttaConnection.hpp"
-#include <iostream>
+#include "logger/Logger.hpp"
 #include <vector>
 
 //---------------------------------------------------------------------------
@@ -14,11 +14,12 @@ void JuttaSnooper::run() {
     while (true) {
         // Write test data:
         connection.write_decoded(writeBuffer);
+        SPDLOG_DEBUG("Wrote {} bytes.", writeBuffer.size());
 
         // Read test data:
         connection.read_decoded(readBuffer);
         if (!readBuffer.empty()) {
-            std::cout << "Read " << readBuffer.size() << " bytes\n";
+            SPDLOG_DEBUG("Read {} bytes.", readBuffer.size());
             // jutta_proto::JuttaConnection::print_bytes(buffer);
             readBuffer.clear();
         }
