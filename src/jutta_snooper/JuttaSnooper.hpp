@@ -22,6 +22,8 @@ class JuttaSnooper {
     void run();
 
  private:
+    static std::string readStringStdin();
+    static void readThreadRun(const jutta_proto::JuttaConnection& connection);
 };
 //---------------------------------------------------------------------------
 }  // namespace jutta_snooper
