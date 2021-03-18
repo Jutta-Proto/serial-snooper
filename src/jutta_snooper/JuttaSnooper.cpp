@@ -12,15 +12,24 @@ namespace jutta_snooper {
 JuttaSnooper::JuttaSnooper(const std::string& device) : connection(device) {}
 
 void JuttaSnooper::run() {
-    std::thread readThread(readStringStdin, connection);
+    // std::thread readThread(readStringStdin, connection);
 
+    std::vector<uint8_t> readBuffer{};
     std::vector<uint8_t> writeBuffer{'H', 'a', 'l', 'l', 'o', '\r', '\n'};
     while (true) {
         // Write test data:
         static_cast<void>(connection.write_decoded(writeBuffer));
         SPDLOG_DEBUG("Wrote {} bytes.", writeBuffer.size());
-        std::this_thread::sleep_for(std::chrono::seconds{1});
+        // std::this_thread::sleep_for(std::chrono::seconds{1});
+
+        static_cast<void>(connection.read_decoded(readBuffer));
+        if (!readBuffer.empty()) {
+            SPDLOG_DEBUG("Read {} bytes.", readBuffer.size());
+            // jutta_proto::JuttaConnection::print_bytes(buffer);
+            readBuffer.clear();
+        }
     }
+    // readThread.join();
 }
 
 std::string JuttaSnooper::readStringStdin() {
