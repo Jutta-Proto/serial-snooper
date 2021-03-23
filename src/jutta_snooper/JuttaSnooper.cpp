@@ -15,12 +15,12 @@ void JuttaSnooper::run() {
     // std::thread readThread(readStringStdin, connection);
 
     std::vector<uint8_t> readBuffer{};
-    std::vector<uint8_t> writeBuffer{'H', 'a', 'l', 'l', 'o', '\r', '\n'};
+    std::vector<uint8_t> writeBuffer{'T', 'Y', ':', '\r', '\n'};
     while (true) {
         // Write test data:
         static_cast<void>(connection.write_decoded(writeBuffer));
         SPDLOG_DEBUG("Wrote {} bytes.", writeBuffer.size());
-        // std::this_thread::sleep_for(std::chrono::seconds{1});
+        std::this_thread::sleep_for(std::chrono::seconds{2});
 
         static_cast<void>(connection.read_decoded(readBuffer));
         if (!readBuffer.empty()) {
