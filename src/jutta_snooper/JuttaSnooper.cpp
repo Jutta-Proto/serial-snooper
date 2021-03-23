@@ -9,9 +9,11 @@
 //---------------------------------------------------------------------------
 namespace jutta_snooper {
 //---------------------------------------------------------------------------
-JuttaSnooper::JuttaSnooper(const std::string& device) : connection(device) {}
+JuttaSnooper::JuttaSnooper(std::string&& device) : connection(std::move(device)) {}
 
 void JuttaSnooper::run() {
+    connection.init();
+
     // std::thread readThread(readStringStdin, connection);
 
     std::vector<uint8_t> readBuffer{};

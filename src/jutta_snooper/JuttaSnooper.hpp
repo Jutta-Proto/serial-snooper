@@ -12,7 +12,7 @@ class JuttaSnooper {
     jutta_proto::JuttaConnection connection;
 
  public:
-    explicit JuttaSnooper(const std::string& device);
+    explicit JuttaSnooper(std::string&& device);
     JuttaSnooper(JuttaSnooper&&) = default;
     JuttaSnooper(const JuttaSnooper&) = default;
     JuttaSnooper& operator=(JuttaSnooper&&) = default;
