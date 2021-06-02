@@ -68,6 +68,7 @@ void JuttaSnooper::uart_run() {
     while (true) {
         connectionLock.lock();
         static_cast<void>(connection.read_decoded(readBuffer));
+        connectionLock.unlock();
         if (!readBuffer.empty()) {
             std::string resultRead = jutta_proto::JuttaConnection::vec_to_string(readBuffer);
             SPDLOG_DEBUG("Read {} bytes: {}", readBuffer.size(), resultRead);
