@@ -1,15 +1,22 @@
 #pragma once
 
 #include <jutta_proto/JuttaConnection.hpp>
+#include <memory>
 #include <string>
 #include <thread>
+#include <mutex>
 
 //---------------------------------------------------------------------------
 namespace jutta_snooper {
 //---------------------------------------------------------------------------
 class JuttaSnooper {
  private:
+    bool shouldRun{false};
+    std::unique_ptr<std::thread> cinReaderThread{nullptr};
+    std::unique_ptr<std::thread> uartReaderThread{nullptr};
+
     jutta_proto::JuttaConnection connection;
+    std::mutex connectionLock;
 
  public:
     explicit JuttaSnooper(std::string&& device);
@@ -22,8 +29,10 @@ class JuttaSnooper {
     void run();
 
  private:
-    static std::string readStringStdin();
-    static void readThreadRun(const jutta_proto::JuttaConnection& connection);
+    void cin_run();
+    void uart_run();
+
+    static std::string read_cin();
 };
 //---------------------------------------------------------------------------
 }  // namespace jutta_snooper
