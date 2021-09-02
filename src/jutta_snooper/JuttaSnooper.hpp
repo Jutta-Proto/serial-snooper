@@ -1,10 +1,11 @@
 #pragma once
 
+#include "DataLogger.hpp"
 #include <jutta_proto/JuttaConnection.hpp>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
-#include <mutex>
 
 //---------------------------------------------------------------------------
 namespace jutta_snooper {
@@ -18,12 +19,14 @@ class JuttaSnooper {
     jutta_proto::JuttaConnection connection;
     std::mutex connectionLock;
 
+    DataLogger dataLogger;
+
  public:
     explicit JuttaSnooper(std::string&& device);
-    JuttaSnooper(JuttaSnooper&&) = default;
-    JuttaSnooper(const JuttaSnooper&) = default;
-    JuttaSnooper& operator=(JuttaSnooper&&) = default;
-    JuttaSnooper& operator=(const JuttaSnooper&) = default;
+    JuttaSnooper(JuttaSnooper&&) = delete;
+    JuttaSnooper(const JuttaSnooper&) = delete;
+    JuttaSnooper& operator=(JuttaSnooper&&) = delete;
+    JuttaSnooper& operator=(const JuttaSnooper&) = delete;
     ~JuttaSnooper() = default;
 
     void run();

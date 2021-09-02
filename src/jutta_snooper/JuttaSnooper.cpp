@@ -14,7 +14,7 @@ JuttaSnooper::JuttaSnooper(std::string&& device) : connection(std::move(device))
 
 void JuttaSnooper::run() {
     shouldRun = true;
-    cinReaderThread = std::make_unique<std::thread>(&JuttaSnooper::cin_run, this);
+    // cinReaderThread = std::make_unique<std::thread>(&JuttaSnooper::cin_run, this);
     uartReaderThread = std::make_unique<std::thread>(&JuttaSnooper::uart_run, this);
 
     while (shouldRun) { std::this_thread::sleep_for(std::chrono::milliseconds{250}); }
@@ -72,7 +72,8 @@ void JuttaSnooper::uart_run() {
         if (!readBuffer.empty()) {
             std::string resultRead = jutta_proto::JuttaConnection::vec_to_string(readBuffer);
             SPDLOG_DEBUG("Read {} bytes: {}", readBuffer.size(), resultRead);
-            jutta_proto::JuttaConnection::print_bytes(readBuffer);
+            dataLogger.log(readBuffer);
+            // jutta_proto::JuttaConnection::print_bytes(readBuffer);
             readBuffer.clear();
         }
     }
