@@ -30,6 +30,7 @@ class JuttaSnooper {
     ~JuttaSnooper() = default;
 
     void run();
+    void stop();
 
  private:
     void cin_run();

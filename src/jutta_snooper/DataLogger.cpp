@@ -24,10 +24,13 @@ DataLogger::~DataLogger() {
 void DataLogger::log(const std::vector<uint8_t>& buf) {
     // NOLINTNEXTLINE (cppcoreguidelines-pro-type-reinterpret-cast)
     rawFile.write(reinterpret_cast<const char*>(buf.data()), static_cast<std::streamsize>(buf.size()));
+    rawFile.flush();
     // NOLINTNEXTLINE (cppcoreguidelines-pro-type-reinterpret-cast)
     rawLinesFile.write(reinterpret_cast<const char*>(buf.data()), static_cast<std::streamsize>(buf.size()));
+    rawLinesFile.flush();
     std::string resultRead = jutta_proto::JuttaConnection::vec_to_string(buf);
     logFile << "Read " << buf.size() << "bytes: " << resultRead;
+    logFile.flush();
 }
 
 void DataLogger::init() {
@@ -38,9 +41,6 @@ void DataLogger::init() {
         SPDLOG_INFO("Old output directory moved to: {}", newPath.string());
     }
     std::filesystem::create_directory(BASE_FOLDER_PATH);
-    assert(rawFile);
-    assert(rawLinesFile);
-    assert(logFile);
 }
 
 const std::filesystem::path DataLogger::get_cur_time_base_path() {

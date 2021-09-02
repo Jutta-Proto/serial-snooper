@@ -19,7 +19,7 @@ void JuttaSnooper::run() {
 
     while (shouldRun) { std::this_thread::sleep_for(std::chrono::milliseconds{250}); }
 
-    cinReaderThread->join();
+    // cinReaderThread->join();
     uartReaderThread->join();
 
     /*std::vector<uint8_t> readBuffer{};
@@ -40,6 +40,10 @@ void JuttaSnooper::run() {
         }
     }*/
     // readThread.join();
+}
+
+void JuttaSnooper::stop() {
+    shouldRun = false;
 }
 
 std::string JuttaSnooper::read_cin() {
