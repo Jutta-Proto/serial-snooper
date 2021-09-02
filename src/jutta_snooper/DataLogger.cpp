@@ -21,13 +21,13 @@ DataLogger::~DataLogger() {
 void DataLogger::log(const std::vector<uint8_t>& buf) {
     // NOLINTNEXTLINE (cppcoreguidelines-pro-type-reinterpret-cast)
     rawFile.write(reinterpret_cast<const char*>(buf.data()), static_cast<std::streamsize>(buf.size()));
-    rawFile.flush();
     // NOLINTNEXTLINE (cppcoreguidelines-pro-type-reinterpret-cast)
     rawLinesFile.write(reinterpret_cast<const char*>(buf.data()), static_cast<std::streamsize>(buf.size()));
-    rawLinesFile.flush();
+    static const char newLine = '\n';
+    rawLinesFile.write(&newLine, 1);
     std::string resultRead = jutta_proto::JuttaConnection::vec_to_string(buf);
-    logFile << "Read " << buf.size() << "bytes: " << resultRead;
-    logFile.flush();
+    logFile << "Read " << buf.size() << " bytes: " << resultRead;
+    SPDLOG_DEBUG("Read {} bytes: {}", buf.size(), resultRead);
 }
 
 void DataLogger::init() {
