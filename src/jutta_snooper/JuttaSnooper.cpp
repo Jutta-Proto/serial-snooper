@@ -69,7 +69,7 @@ void JuttaSnooper::cin_run() {
 void JuttaSnooper::uart_run() {
     connection.init();
     std::vector<uint8_t> readBuffer{};
-    while (true) {
+    while (shouldRun) {
         connectionLock.lock();
         static_cast<void>(connection.read_decoded(readBuffer));
         connectionLock.unlock();
