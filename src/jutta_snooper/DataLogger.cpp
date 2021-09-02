@@ -2,7 +2,6 @@
 #include <cassert>
 #include <chrono>
 #include <filesystem>
-#include <ios>
 #include <jutta_proto/JuttaConnection.hpp>
 #include <logger/Logger.hpp>
 #include <string>
@@ -11,9 +10,7 @@
 //---------------------------------------------------------------------------
 namespace jutta_snooper {
 //---------------------------------------------------------------------------
-DataLogger::DataLogger() : rawFile(RAW_FILE_PATH, std::ios::out | std::ios::binary),
-                           rawLinesFile(RAW_WITH_LINES_FILE_PATH, std::ios::out | std::ios::binary),
-                           logFile(LOG_FILE_PATH, std::ios::out) { init(); }
+DataLogger::DataLogger() { init(); }
 
 DataLogger::~DataLogger() {
     rawFile.close();
@@ -41,6 +38,13 @@ void DataLogger::init() {
         SPDLOG_INFO("Old output directory moved to: {}", newPath.string());
     }
     std::filesystem::create_directory(BASE_FOLDER_PATH);
+
+    rawFile.open(RAW_FILE_PATH, std::ofstream::out | std::ofstream::binary);
+    assert(rawFile.is_open());
+    rawLinesFile.open(RAW_WITH_LINES_FILE_PATH, std::ofstream::out | std::ofstream::binary);
+    assert(rawLinesFile.is_open());
+    logFile.open(LOG_FILE_PATH, std::ofstream::out);
+    assert(logFile.is_open());
 }
 
 const std::filesystem::path DataLogger::get_cur_time_base_path() {
