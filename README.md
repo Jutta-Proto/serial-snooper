@@ -1,4 +1,4 @@
-# UI
+# Serial Snooper
 A `C++20` based implementation to snoop the traffic between an JURA coffee maker and the [Smart Control](https://uk.jura.com/en/homeproducts/accessories/SmartConnect-Main-72167) dongle.
 The used protocol for deobfuscating the send data can be found [here](https://github.com/Jutta-Proto/protocol-cpp).
 
