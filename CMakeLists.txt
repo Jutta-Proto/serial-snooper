@@ -72,7 +72,7 @@ conan_cmake_run(REQUIRES spdlog/1.8.5
 conan_cmake_autodetect(settings)
 conan_cmake_install(PATH_OR_REFERENCE .
                     BUILD missing
-                    REMOTE conan-center
+                    REMOTE conancenter
                     SETTINGS ${settings})
 
 find_package(spdlog REQUIRED)
