@@ -50,9 +50,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
   message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/v0.16.1/conan.cmake"
+  file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
                 "${CMAKE_BINARY_DIR}/conan.cmake"
-                EXPECTED_HASH SHA256=396e16d0f5eabdc6a14afddbcfff62a54a7ee75c6da23f32f7a31bc85db23484
                 TLS_VERIFY ON)
 endif()
 
@@ -65,11 +64,11 @@ else()
     set(CONAN_BUILD_TYPE ${CMAKE_BUILD_TYPE})
 endif()
 
-conan_cmake_run(REQUIRES spdlog/1.8.5
-                GENERATORS cmake_find_package
-                BUILD missing)
+conan_cmake_configure(REQUIRES spdlog/1.10.0
+                      GENERATORS cmake_find_package)
 
 conan_cmake_autodetect(settings)
+
 conan_cmake_install(PATH_OR_REFERENCE .
                     BUILD missing
                     REMOTE conancenter
